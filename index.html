@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Devine Kahaniyan | दिल को छू लेने वाली कहानियाँ</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span>देव</span><div><strong>Devine Kahaniyan</strong><small>कहानियाँ जो दिल में उतर जाएँ</small></div></div>
+  <button class="menu" onclick="document.querySelector('nav').classList.toggle('show')">☰</button>
+  <nav><a href="#home">होम</a><a href="#stories">कहानियाँ</a><a href="#categories">श्रेणियाँ</a><a href="#about">हमारे बारे में</a></nav>
+</header>
+
+<main id="home">
+<section class="hero">
+  <div>
+    <p class="eyebrow">DEVINE KAHANIYAN</p>
+    <h1>हर कहानी में एक एहसास,<br><em>हर अंत में एक सीख।</em></h1>
+    <p class="hero-text">परिवार, संघर्ष, रिश्तों, सफलता और जीवन की सच्चाइयों से जुड़ी दिल को छू लेने वाली हिंदी कहानियाँ पढ़िए।</p>
+    <a class="primary" href="#stories">कहानियाँ पढ़ें →</a>
+  </div>
+  <div class="hero-card"><div class="sun">✦</div><div class="quote">“एक अच्छी कहानी<br>सिर्फ सुनाई नहीं जाती,<br>महसूस की जाती है।”</div></div>
+</section>
+
+<section class="section" id="stories">
+  <div class="section-head"><div><p class="eyebrow">STORY LIBRARY</p><h2>नई कहानियाँ</h2></div><span id="count"></span></div>
+  <div class="search"><span>⌕</span><input id="search" placeholder="कहानी खोजें..." oninput="renderStories()"></div>
+  <div class="chips" id="categories"></div>
+  <div class="grid" id="storyGrid"></div>
+</section>
+
+<section class="about" id="about">
+  <div><p class="eyebrow">ABOUT US</p><h2>Devine Kahaniyan</h2></div>
+  <p>यहाँ आपको परिवार, रिश्तों, संघर्ष, सफलता, प्रेम, सम्मान और जीवन की सीख से जुड़ी मनोरंजक हिंदी कहानियाँ मिलेंगी। हमारा उद्देश्य ऐसी कहानियाँ देना है जिन्हें पूरा परिवार साथ बैठकर पढ़ और सुन सके।</p>
+</section>
+</main>
+
+<footer><strong>Devine Kahaniyan</strong><span>© 2026 • सभी अधिकार सुरक्षित</span></footer>
+
+<script>
+const stories = [
+ {title:"चालाक दर्जी",cat:"मोरल कहानी",text:"माधव की सिलाई पूरे राज्य में मशहूर थी। लेकिन उसकी असली ताकत उसकी समझदारी थी...",emoji:"🧵"},
+ {title:"कंजूस पति को खर्चीली पत्नी ने सिखाया सबक",cat:"परिवार",text:"एक छोटे से गाँव में पति-पत्नी रहते थे। दोनों की सोच अलग थी, लेकिन एक घटना ने उन्हें पैसों की असली कीमत समझा दी...",emoji:"🏡"},
+ {title:"अमीर की बारिश और गरीब की बारिश",cat:"जीवन की सीख",text:"बारिश दोनों के घरों पर एक जैसी बरसी, लेकिन दोनों ने उसे बिल्कुल अलग तरह से महसूस किया...",emoji:"🌧️"}
+];
+let active="सभी";
+function renderStories(){
+ const q=document.getElementById("search").value.toLowerCase();
+ const list=stories.filter(s=>(active==="सभी"||s.cat===active)&&(!q||s.title.toLowerCase().includes(q)||s.text.toLowerCase().includes(q)));
+ document.getElementById("count").textContent=list.length+" कहानियाँ";
+ document.getElementById("storyGrid").innerHTML=list.map((s,i)=>`
+ <article class="story">
+   <div class="cover">${s.emoji}<span>${s.cat}</span></div>
+   <div class="story-body"><h3>${s.title}</h3><p>${s.text}</p><button onclick="readStory(${stories.indexOf(s)})">पूरी कहानी पढ़ें →</button></div>
+ </article>`).join("") || "<p class='empty'>कोई कहानी नहीं मिली।</p>";
+}
+function renderCats(){
+ const cats=["सभी",...new Set(stories.map(s=>s.cat))];
+ document.getElementById("categories").innerHTML=cats.map(c=>`<button class="${c===active?'active':''}" onclick="active='${c}';renderCats();renderStories()">${c}</button>`).join("");
+}
+function readStory(i){
+ const s=stories[i];
+ alert("यहाँ आपकी पूरी कहानी खुलेगी।\n\n"+s.title+"\n\n"+s.text+"\n\nअगले चरण में हम इसे आपके वास्तविक stories से जोड़ सकते हैं।");
+}
+renderCats();renderStories();
+</script>
+</body>
+</html>
