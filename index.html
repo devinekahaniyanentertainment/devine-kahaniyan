@@ -46,6 +46,8 @@ const stories = [
  {title:"अमीर की बारिश और गरीब की बारिश",cat:"जीवन की सीख",text:"बारिश दोनों के घरों पर एक जैसी बरसी, लेकिन दोनों ने उसे बिल्कुल अलग तरह से महसूस किया...",emoji:"🌧️"}
 ];
 let active="सभी";
+  https://wurmheablncfwupvmbbm.supabase.co/rest/v1/
+  const SUPABASE_KEY = "sb_publishable__6dWW9Fcs3uexlGTuMG0Fw_ga1t5jr-";
 function renderStories(){
  const q=document.getElementById("search").value.toLowerCase();
  const list=stories.filter(s=>(active==="सभी"||s.cat===active)&&(!q||s.title.toLowerCase().includes(q)||s.text.toLowerCase().includes(q)));
