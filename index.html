@@ -47,7 +47,7 @@ const stories = [
 ];
 let active="सभी";
   const SUPABASE_URL = "https://wurmheablncfwupvmbbm.supabase.co";
-  const SUPABASE_KEY = "sb_publishable__6dWW9Fcs3uexlGTuMG0Fw_ga1t5jr-";
+  const SUPABASE_KEY = "sb_publishable_6dWW9Fcs3uexlGTuMG0Fw_ga1t5jr-";
 function renderStories(){
  const q=document.getElementById("search").value.toLowerCase();
  const list=stories.filter(s=>(active==="सभी"||s.cat===active)&&(!q||s.title.toLowerCase().includes(q)||s.text.toLowerCase().includes(q)));
