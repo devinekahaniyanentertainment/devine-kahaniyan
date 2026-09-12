@@ -64,9 +64,12 @@ function renderCats(){
 }
 function readStory(i){
  const s=stories[i];
- alert("यहाँ आपकी पूरी कहानी खुलेगी।\n\n"+s.title+"\n\n"+s.text+"\n\nअगले चरण में हम इसे आपके वास्तविक stories से जोड़ सकते हैं।");
+ document.body.innerHTML = `
+<div style="max-width:800px;margin:40px auto;padding:20px;font-family:Arial;line-height:1.8">
+<h1>${s.title}</h1>
+<p style="white-space:pre-line;font-size:18px">${s.text}</p>
+<button onclick="location.reload()" style="padding:12px 20px">← वापस कहानियों पर</button>
+</div>
+`;
 }
 renderCats();renderStories();
-</script>
-</body>
-</html>
