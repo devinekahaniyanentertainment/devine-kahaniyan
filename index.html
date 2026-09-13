@@ -80,9 +80,14 @@ async function loadStories(){
  const list=stories.filter(s=>(active==="सभी"||s.cat===active)&&(!q||s.title.toLowerCase().includes(q)||s.text.toLowerCase().includes(q)));
  document.getElementById("count").textContent=list.length+" कहानियाँ";
  document.getElementById("storyGrid").innerHTML=list.map((s,i)=>`
- <div class="cover">${s.emoji}<span>${s.cat}</span></div>
-   <button onclick="readStoryByTitle('${s.title}')">पढ़ें →</button>
- </article>`).join("") || "<p class='empty'>कोई कहानी नहीं मिली।</p>";
+ <div class="story">
+   <div class="cover">${s.emoji}<span>${s.cat}</span></div>
+   <div class="story-body">
+     <h3>${s.title}</h3>
+     <p>${(s.text||"").slice(0,90)}...</p>
+     <button onclick="readStoryByTitle('${s.title.replace(/'/g,"\\'")}')">पढ़ें →</button>
+   </div>
+ </div>`).join("") || "<p class='empty'>कोई कहानी नहीं मिली।</p>";
 }
 function renderCats(){
  const cats=["सभी",...new Set(stories.map(s=>s.cat))];
