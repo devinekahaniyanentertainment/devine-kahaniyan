@@ -64,12 +64,13 @@ async function loadStories(){
 
   data.forEach(s => {
     stories.push({
-      title: s.title,
-      cat: "कहानी",
-      text: s.content,
-      emoji: "📖"
+        title: s.title,
+        cat: "कहानी",
+        text: s.content || s.text, // दोनों में से जो भी डेटाबेस में हो
+        emoji: "📖"
     });
-  });
+});
+
 
   renderCats();
   renderStories();
@@ -79,9 +80,8 @@ async function loadStories(){
  const list=stories.filter(s=>(active==="सभी"||s.cat===active)&&(!q||s.title.toLowerCase().includes(q)||s.text.toLowerCase().includes(q)));
  document.getElementById("count").textContent=list.length+" कहानियाँ";
  document.getElementById("storyGrid").innerHTML=list.map((s,i)=>`
- <article class="story">
-   <div class="cover">${s.emoji}<span>${s.cat}</span></div>
-   <div class="story-body"><h3>${s.title}</h3><p>${s.text}</p><button onclick="readStory(${stories.indexOf(s)})">पूरी कहानी पढ़ें →</button></div>
+ <div class="cover">${s.emoji}<span>${s.cat}</span></div>
+   <button onclick="readStoryByTitle('${s.title}')">पढ़ें →</button>
  </article>`).join("") || "<p class='empty'>कोई कहानी नहीं मिली।</p>";
 }
 function renderCats(){
@@ -98,4 +98,15 @@ function readStory(i){
 </div>
 `;
 }
+  function readStoryByTitle(title) {
+    const s = stories.find(item => item.title === title);
+    if (!s) return;
+    document.body.innerHTML = `
+    <div style="max-width:800px;margin:40px auto;padding:20px;font-family:Arial;line-height:1.8">
+      <h1>${s.title}</h1>
+      <p style="white-space:pre-line;font-size:18px">${s.text}</p>
+      <button onclick="location.reload()" style="padding:12px 20px">← वापस कहानियों पर</button>
+    </div>`;
+}
+
 loadStories();
