@@ -49,7 +49,32 @@ let active="सभी";
   const SUPABASE_URL = "https://wurmheablncfwupvmbbm.supabase.co";
   const SUPABASE_KEY = "sb_publishable_6dWW9Fcs3uexlGTuMG0Fw_ga1t5jr-";
   const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-function renderStories(){
+async function loadStories(){
+  const { data, error } = await supabaseClient
+    .from("stories")
+    .select("id,title,content,created_at")
+    .order("created_at", { ascending: false });
+
+  if(error){
+    console.error(error);
+    return;
+  }
+
+  stories.length = 0;
+
+  data.forEach(s => {
+    stories.push({
+      title: s.title,
+      cat: "कहानी",
+      text: s.content,
+      emoji: "📖"
+    });
+  });
+
+  renderCats();
+  renderStories();
+}
+  function renderStories(){
  const q=document.getElementById("search").value.toLowerCase();
  const list=stories.filter(s=>(active==="सभी"||s.cat===active)&&(!q||s.title.toLowerCase().includes(q)||s.text.toLowerCase().includes(q)));
  document.getElementById("count").textContent=list.length+" कहानियाँ";
@@ -73,4 +98,4 @@ function readStory(i){
 </div>
 `;
 }
-renderCats();renderStories();
+loadStories();
