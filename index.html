@@ -36,9 +36,9 @@
         ☰
       </button>
       <nav>
-        <a href="#home" onclick="navigateHome()">होम</a>
-        <a href="#stories" onclick="navigateStories()">कहानियाँ</a>
-        <a href="#about" onclick="navigateAbout()">हमारे बारे में</a>
+        <a href="javascript:void(0)" onclick="navigateHome()">होम</a>
+        <a href="javascript:void(0)" onclick="navigateStories()">कहानियाँ</a>
+        <a href="javascript:void(0)" onclick="navigateAbout()">हमारे बारे में</a>
       </nav>
     </header>
 
@@ -56,7 +56,7 @@
             परिवार, संघर्ष, रिश्तों, सफलता और जीवन की सच्चाइयों से जुड़ी दिल को
             छू लेने वाली प्रामाणिक हिंदी कहानियों का विशाल संग्रह।
           </p>
-          <a class="btn-primary" href="#stories" onclick="navigateStories()">
+          <a class="btn-primary" href="javascript:void(0)" onclick="navigateStories()">
             <span>कहानियाँ पढ़ें</span>
             <span>→</span>
           </a>
@@ -125,9 +125,9 @@
       <div class="story-reader-container">
         <!-- Breadcrumb Navigation -->
         <nav class="breadcrumbs" aria-label="Breadcrumb">
-          <a href="#home" onclick="navigateHome()">होम</a>
+          <a href="javascript:void(0)" onclick="navigateHome()">होम</a>
           <span class="breadcrumb-sep">›</span>
-          <a href="#stories" onclick="navigateStories()">कहानियाँ</a>
+          <a href="javascript:void(0)" onclick="navigateStories()">कहानियाँ</a>
           <span class="breadcrumb-sep">›</span>
           <span id="crumbCategory">श्रेणी</span>
           <span class="breadcrumb-sep">›</span>
@@ -341,13 +341,15 @@
       ];
 
       // =========================================================================
-      // View Navigation & Hash Handling
+      // View Navigation & Clean URL Handling
       // =========================================================================
       function navigateHome() {
         document.getElementById("storyView").style.display = "none";
         document.getElementById("homeView").style.display = "block";
         window.scrollTo({ top: 0, behavior: "smooth" });
-        window.location.hash = "home";
+        if (window.location.hash) {
+          history.replaceState(null, "", window.location.pathname + window.location.search);
+        }
         document.querySelector("nav").classList.remove("show");
       }
 
@@ -358,7 +360,9 @@
         if (storiesEl) {
           storiesEl.scrollIntoView({ behavior: "smooth" });
         }
-        window.location.hash = "stories";
+        if (window.location.hash.startsWith("#story=")) {
+          history.replaceState(null, "", window.location.pathname + window.location.search);
+        }
         document.querySelector("nav").classList.remove("show");
       }
 
@@ -369,7 +373,9 @@
         if (aboutEl) {
           aboutEl.scrollIntoView({ behavior: "smooth" });
         }
-        window.location.hash = "about";
+        if (window.location.hash.startsWith("#story=")) {
+          history.replaceState(null, "", window.location.pathname + window.location.search);
+        }
         document.querySelector("nav").classList.remove("show");
       }
 
@@ -853,16 +859,12 @@
         }, 2500);
       }
 
-      // Check URL Hash on Page Load or Back/Forward Button
+      // Check URL on Page Load or Back/Forward Button
       function checkUrlForStory() {
         const hash = window.location.hash;
         if (hash.startsWith("#story=")) {
           const id = hash.replace("#story=", "");
           openStory(id);
-        } else if (hash === "#stories") {
-          navigateStories();
-        } else if (hash === "#about") {
-          navigateAbout();
         } else {
           navigateHome();
         }
@@ -875,11 +877,7 @@
           if (!currentStory || String(currentStory.id) !== String(id)) {
             openStory(id);
           }
-        } else if (hash === "#stories") {
-          navigateStories();
-        } else if (hash === "#about") {
-          navigateAbout();
-        } else if (hash === "#home" || hash === "") {
+        } else {
           navigateHome();
         }
       });
