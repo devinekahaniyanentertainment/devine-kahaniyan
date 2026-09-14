@@ -205,6 +205,27 @@
           <img id="storyCoverImg" src="" alt="कहानी कवर" />
         </div>
 
+        <!-- Optional Embedded YouTube Video Player -->
+        <div
+          class="reader-video-wrapper"
+          id="storyVideoSection"
+          style="display: none"
+        >
+          <div class="video-header">
+            <span>🎬</span>
+            <strong>इस कहानी का वीडियो देखें (Watch Story Video)</strong>
+          </div>
+          <div class="video-responsive">
+            <iframe
+              id="storyVideoFrame"
+              src=""
+              title="Story Video Player"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
+
         <!-- Story Main Body Article -->
         <article class="story-article">
           <div id="storyContentBody">
@@ -352,6 +373,8 @@
       function navigateHome(updateHistory = true) {
         document.getElementById("storyView").style.display = "none";
         document.getElementById("homeView").style.display = "block";
+        const videoFrame = document.getElementById("storyVideoFrame");
+        if (videoFrame) videoFrame.src = "";
         window.scrollTo({ top: 0, behavior: "smooth" });
         if (updateHistory) {
           const url = new URL(window.location.href);
@@ -365,6 +388,8 @@
       function navigateStories(updateHistory = true) {
         document.getElementById("storyView").style.display = "none";
         document.getElementById("homeView").style.display = "block";
+        const videoFrame = document.getElementById("storyVideoFrame");
+        if (videoFrame) videoFrame.src = "";
         const storiesEl = document.getElementById("stories");
         if (storiesEl) {
           storiesEl.scrollIntoView({ behavior: "smooth" });
@@ -381,6 +406,8 @@
       function navigateAbout(updateHistory = true) {
         document.getElementById("storyView").style.display = "none";
         document.getElementById("homeView").style.display = "block";
+        const videoFrame = document.getElementById("storyVideoFrame");
+        if (videoFrame) videoFrame.src = "";
         const aboutEl = document.getElementById("about");
         if (aboutEl) {
           aboutEl.scrollIntoView({ behavior: "smooth" });
@@ -420,6 +447,7 @@
                 title: item.title || "कहानी",
                 category: item.category || parsed.category || "प्रेरणादायक",
                 cover_image: item.cover_image || parsed.cover_image || "",
+                video_url: item.video_url || parsed.video_url || "",
                 content: item.content || "",
                 moral: item.moral || parsed.moral || "",
                 read_time:
@@ -445,12 +473,23 @@
         checkUrlForStory();
       }
 
-      // Intelligently parse moral, category, or cover image if embedded in content text
+      // Intelligently parse moral, category, cover image, or video URL
       function parseStoryDetails(item) {
         const text = item.content || "";
         let moral = item.moral || "";
         let category = item.category || "प्रेरणादायक";
         let cover_image = item.cover_image || "";
+        let video_url = item.video_url || "";
+
+        // Check for YouTube link in text if video_url column is empty
+        if (!video_url) {
+          const ytMatch = text.match(
+            /(https?:\/\/(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)[\w-]{11}[^\s\)\"\']*)/i,
+          );
+          if (ytMatch) {
+            video_url = ytMatch[1];
+          }
+        }
 
         // Check for moral keywords at the end if moral column is empty
         if (!moral) {
@@ -474,8 +513,21 @@
           moral,
           category,
           cover_image,
+          video_url,
           read_time: calculateReadTime(text),
         };
+      }
+
+      // Extract embeddable URL from any standard YouTube link
+      function getYouTubeEmbedUrl(url) {
+        if (!url) return "";
+        url = url.trim();
+        const regExp =
+          /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|shorts\/|watch\?.+&v=))([\w-]{11})/;
+        const match = url.match(regExp);
+        return match && match[1]
+          ? `https://www.youtube-nocookie.com/embed/${match[1]}?rel=0`
+          : "";
       }
 
       function calculateReadTime(text) {
@@ -559,12 +611,16 @@
             const coverHtml = story.cover_image
               ? `<img src="${story.cover_image}" alt="${story.title}" loading="lazy" onerror="this.onerror=null;this.parentElement.innerHTML='<div class=\\'cover-emoji-fallback\\'>${categoryIcons[story.category] || "📖"}</div>'" />`
               : `<div class="cover-emoji-fallback">${categoryIcons[story.category] || "📖"}</div>`;
+            const videoBadgeHtml = story.video_url
+              ? `<span class="card-video-badge">▶ वीडियो</span>`
+              : "";
 
             return `
               <div class="story-card" onclick="openStory(${story.id})">
                 <div class="story-card-cover">
                   ${coverHtml}
                   <span class="card-category-badge">${story.category || "प्रेरणादायक"}</span>
+                  ${videoBadgeHtml}
                   <span class="card-read-time">⏱ ${story.read_time || "3 मिनट"}</span>
                 </div>
                 <div class="story-card-body">
@@ -628,6 +684,19 @@
           coverBanner.style.display = "block";
         } else {
           coverBanner.style.display = "none";
+        }
+
+        // Embedded YouTube Video Player Handling
+        const videoSection = document.getElementById("storyVideoSection");
+        const videoFrame = document.getElementById("storyVideoFrame");
+        const embedUrl = getYouTubeEmbedUrl(story.video_url);
+
+        if (embedUrl) {
+          videoFrame.src = embedUrl;
+          videoSection.style.display = "block";
+        } else {
+          videoFrame.src = "";
+          videoSection.style.display = "none";
         }
 
         // Render Rich Content and Moral Box
@@ -787,12 +856,16 @@
             const coverHtml = s.cover_image
               ? `<img src="${s.cover_image}" alt="${s.title}" loading="lazy" />`
               : `<div class="cover-emoji-fallback">${categoryIcons[s.category] || "📖"}</div>`;
+            const videoBadgeHtml = s.video_url
+              ? `<span class="card-video-badge">▶ वीडियो</span>`
+              : "";
 
             return `
               <div class="story-card" onclick="openStory(${s.id})">
                 <div class="story-card-cover">
                   ${coverHtml}
                   <span class="card-category-badge">${s.category || "प्रेरणादायक"}</span>
+                  ${videoBadgeHtml}
                   <span class="card-read-time">⏱ ${s.read_time || "3 मिनट"}</span>
                 </div>
                 <div class="story-card-body">
