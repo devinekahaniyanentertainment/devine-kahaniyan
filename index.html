@@ -2,203 +2,886 @@
 <html lang="hi">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Devine Kahaniyan | दिल को छू लेने वाली कहानियाँ</title>
+    <link rel="icon" type="image/jpeg" href="logo.jpeg" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <!-- Topbar Navigation -->
     <header class="topbar">
-      <div class="brand">
-        <span>देव</span>
-        <div>
-          <strong>Devine Kahaniyan</strong
-          ><small>कहानियाँ जो दिल में उतर जाएँ</small>
+      <a class="brand" onclick="navigateHome()" href="javascript:void(0)">
+        <img
+          src="logo.jpeg"
+          alt="Devine Kahaniyan Logo"
+          class="brand-logo-img"
+          onerror="
+            this.style.display = 'none';
+            document.getElementById('brand-fallback').style.display = 'grid';
+          "
+        />
+        <div id="brand-fallback" class="brand-fallback" style="display: none">
+          <span>देव</span>
         </div>
-      </div>
+        <div class="brand-text">
+          <strong>Devine Kahaniyan</strong>
+          <small>कहानियाँ जो दिल में उतर जाएँ</small>
+        </div>
+      </a>
       <button
-        class="menu"
+        class="menu-toggle"
+        aria-label="Toggle Menu"
         onclick="document.querySelector('nav').classList.toggle('show')"
       >
         ☰
       </button>
       <nav>
-        <a href="#home">होम</a><a href="#stories">कहानियाँ</a
-        ><a href="#categories">श्रेणियाँ</a><a href="#about">हमारे बारे में</a>
+        <a href="#home" onclick="navigateHome()">होम</a>
+        <a href="#stories" onclick="navigateStories()">कहानियाँ</a>
+        <a href="#about" onclick="navigateAbout()">हमारे बारे में</a>
       </nav>
     </header>
 
-    <main id="home">
-      <section class="hero">
+    <!-- Main Content Container: Home & Library View -->
+    <main id="homeView">
+      <!-- Hero Banner -->
+      <section class="hero" id="home">
         <div>
-          <p class="eyebrow">DEVINE KAHANIYAN</p>
-          <h1>हर कहानी में एक एहसास,<br /><em>हर अंत में एक सीख।</em></h1>
+          <span class="eyebrow">✦ DEVINE KAHANIYAN</span>
+          <h1>
+            हर कहानी में एक एहसास,<br />
+            <em>हर अंत में एक सीख।</em>
+          </h1>
           <p class="hero-text">
             परिवार, संघर्ष, रिश्तों, सफलता और जीवन की सच्चाइयों से जुड़ी दिल को
-            छू लेने वाली हिंदी कहानियाँ पढ़िए।
+            छू लेने वाली प्रामाणिक हिंदी कहानियों का विशाल संग्रह।
           </p>
-          <a class="primary" href="#stories">कहानियाँ पढ़ें →</a>
+          <a class="btn-primary" href="#stories" onclick="navigateStories()">
+            <span>कहानियाँ पढ़ें</span>
+            <span>→</span>
+          </a>
         </div>
         <div class="hero-card">
-          <div class="sun">✦</div>
+          <div class="motif">✦ 📜 ✦</div>
           <div class="quote">
-            “एक अच्छी कहानी<br />सिर्फ सुनाई नहीं जाती,<br />महसूस की जाती है।”
+            “एक अच्छी कहानी<br />
+            सिर्फ सुनाई नहीं जाती,<br />
+            महसूस की जाती है।”
           </div>
+          <div class="quote-author">— डिवाइन कहानियाँ</div>
         </div>
       </section>
 
+      <!-- Stories Library Section -->
       <section class="section" id="stories">
         <div class="section-head">
           <div>
-            <p class="eyebrow">STORY LIBRARY</p>
-            <h2>नई कहानियाँ</h2>
+            <span class="eyebrow">STORY ARCHIVE</span>
+            <h2>कहानी संग्रह</h2>
           </div>
-          <span id="count"></span>
+          <span class="count-badge" id="count">कहानियाँ लोड हो रही हैं...</span>
         </div>
-        <div class="search">
-          <span>⌕</span
-          ><input
+
+        <div class="search-bar">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+            />
+          </svg>
+          <input
             id="search"
-            placeholder="कहानी खोजें..."
+            type="text"
+            placeholder="शीर्षक या कहानी में से कोई शब्द खोजें..."
             oninput="renderStories()"
           />
         </div>
+
         <div class="chips" id="categories"></div>
-        <div class="grid" id="storyGrid"></div>
+        <div class="grid" id="storyGrid">
+          <div class="empty">
+            <div class="spinner"></div>
+            <p>कहानियाँ लोड हो रही हैं...</p>
+          </div>
+        </div>
       </section>
 
+      <!-- About Us Section -->
       <section class="about" id="about">
         <div>
-          <p class="eyebrow">ABOUT US</p>
+          <span class="eyebrow">ABOUT US</span>
           <h2>Devine Kahaniyan</h2>
         </div>
         <p>
           यहाँ आपको परिवार, रिश्तों, संघर्ष, सफलता, प्रेम, सम्मान और जीवन की सीख
-          से जुड़ी मनोरंजक हिंदी कहानियाँ मिलेंगी। हमारा उद्देश्य ऐसी कहानियाँ
-          देना है जिन्हें पूरा परिवार साथ बैठकर पढ़ और सुन सके।
+          से जुड़ी मनोरंजक और प्रेरणादायक हिंदी कहानियाँ मिलेंगी। हमारा उद्देश्य
+          ऐसी कहानियाँ प्रस्तुत करना है जिन्हें पूरा परिवार साथ बैठकर पढ़ सके और
+          जीवन में सकारात्मक बदलाव महसूस कर सके।
         </p>
       </section>
     </main>
 
+    <!-- Dedicated Story Reader View -->
+    <section id="storyView">
+      <div class="story-reader-container">
+        <!-- Breadcrumb Navigation -->
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <a href="#home" onclick="navigateHome()">होम</a>
+          <span class="breadcrumb-sep">›</span>
+          <a href="#stories" onclick="navigateStories()">कहानियाँ</a>
+          <span class="breadcrumb-sep">›</span>
+          <span id="crumbCategory">श्रेणी</span>
+          <span class="breadcrumb-sep">›</span>
+          <span class="breadcrumb-current" id="crumbTitle">कहानी</span>
+        </nav>
+
+        <button class="back-btn-pill" onclick="navigateStories()">
+          ← वापस कहानी संग्रह पर
+        </button>
+
+        <!-- Reader Header Details -->
+        <div class="reader-header">
+          <div class="reader-meta-top">
+            <span class="reader-category-badge" id="storyCatBadge"
+              >प्रेरणादायक</span
+            >
+            <span class="reader-time" id="storyReadTime">⏱ 4 मिनट का समय</span>
+            <span class="card-date" id="storyDate"></span>
+          </div>
+          <h1 class="reader-title" id="storyTitle">कहानी का शीर्षक</h1>
+        </div>
+
+        <!-- Reader Toolbar -->
+        <div class="reader-toolbar">
+          <div class="font-size-controls">
+            <span
+              style="
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--text-muted);
+              "
+              >फॉन्ट आकार:</span
+            >
+            <button
+              class="font-btn"
+              onclick="adjustFontSize(-2)"
+              title="छोटा आकार"
+            >
+              A-
+            </button>
+            <button
+              class="font-btn"
+              onclick="adjustFontSize(0)"
+              title="सामान्य आकार"
+            >
+              A
+            </button>
+            <button
+              class="font-btn"
+              onclick="adjustFontSize(2)"
+              title="बड़ा आकार"
+            >
+              A+
+            </button>
+          </div>
+          <div class="reader-actions">
+            <button class="action-btn share-btn" onclick="triggerShare()">
+              <span>🔗</span> <span>साझा करें (Share)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Optional Story Cover Image Banner -->
+        <div
+          class="reader-cover-banner"
+          id="storyCoverBanner"
+          style="display: none"
+        >
+          <img id="storyCoverImg" src="" alt="कहानी कवर" />
+        </div>
+
+        <!-- Story Main Body Article -->
+        <article class="story-article">
+          <div id="storyContentBody">
+            <!-- Formatted story paragraphs will be rendered here -->
+          </div>
+
+          <!-- Enhanced Ornate "सीख" (Moral) Box -->
+          <div class="moral-box" id="moralSection">
+            <div class="moral-header">
+              <span class="moral-icon">📜</span>
+              <h2 class="moral-title">कहानी की सीख (Moral)</h2>
+            </div>
+            <p class="moral-text" id="moralTextContent">
+              <!-- Moral message will be injected here -->
+            </p>
+          </div>
+        </article>
+
+        <!-- Social Share Block -->
+        <div class="share-section-box">
+          <h3>🌟 यह कहानी अपनों के साथ साझा करें</h3>
+          <p
+            style="
+              font-size: 14px;
+              color: var(--text-muted);
+              margin-bottom: 16px;
+            "
+          >
+            अच्छे विचार और कहानियाँ बाँटने से जीवन में सकारात्मकता बढ़ती है।
+          </p>
+          <div class="share-buttons-group">
+            <button
+              class="share-btn-item btn-whatsapp"
+              onclick="shareVia('whatsapp')"
+            >
+              📱 WhatsApp
+            </button>
+            <button
+              class="share-btn-item btn-facebook"
+              onclick="shareVia('facebook')"
+            >
+              📘 Facebook
+            </button>
+            <button
+              class="share-btn-item btn-twitter"
+              onclick="shareVia('twitter')"
+            >
+              🐦 Twitter/X
+            </button>
+            <button class="share-btn-item btn-copy" onclick="copyStoryLink()">
+              📋 लिंक कॉपी करें
+            </button>
+          </div>
+        </div>
+
+        <!-- Next / Previous Story Navigator -->
+        <div class="story-nav-bar" id="storyNavBar"></div>
+
+        <!-- Related Stories ("और कहानियाँ पढ़ें") -->
+        <div class="related-section">
+          <h3>📖 और प्रेरक कहानियाँ पढ़ें</h3>
+          <div class="grid" id="relatedGrid"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
     <footer>
-      <strong>Devine Kahaniyan</strong><span>© 2026 • सभी अधिकार सुरक्षित</span>
+      <strong>Devine Kahaniyan</strong>
+      <span>© 2026 • दिल को छू लेने वाली कहानियाँ • सर्वाधिकार सुरक्षित</span>
     </footer>
+
+    <!-- Toast Alert Notification -->
+    <div id="toast" class="toast">लिंक कॉपी हो गया!</div>
+
+    <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-      const sampleStories = [
-        {
-          title: "चालाक दर्जी",
-          cat: "मोरल कहानी",
-          text: "माधव की सिलाई पूरे राज्य में मशहूर थी। लेकिन उसकी असली ताकत उसकी समझदारी थी...",
-          emoji: "🧵",
-        },
-        {
-          title: "कंजूस पति को खर्चीली पत्नी ने सिखाया सबक",
-          cat: "परिवार",
-          text: "एक छोटे से गाँव में पति-पत्नी रहते थे। दोनों की सोच अलग थी, लेकिन एक घटना ने उन्हें पैसों की असली कीमत समझा दी...",
-          emoji: "🏡",
-        },
-        {
-          title: "अमीर की बारिश और गरीब की बारिश",
-          cat: "जीवन की सीख",
-          text: "बारिश दोनों के घरों पर एक जैसी बरसी, लेकिन दोनों ने उसे बिल्कुल अलग तरह से महसूस किया...",
-          emoji: "🌧️",
-        },
-      ];
-
-      const stories = [...sampleStories];
-      let active = "सभी";
-
+      // Global Data State
       const SUPABASE_URL = "https://wurmheablncfwupvmbbm.supabase.co";
       const SUPABASE_KEY = "sb_publishable__6dWW9Fcs3uexlGTuMG0Fw_ga1t5jr-";
       const supabaseClient = window.supabase
         ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
         : null;
 
-      function renderStories() {
-        const q = document.getElementById("search").value.toLowerCase();
-        const list = stories.filter(
-          (s) =>
-            (active === "सभी" || s.cat === active) &&
-            (!q ||
-              s.title.toLowerCase().includes(q) ||
-              s.text.toLowerCase().includes(q)),
-        );
-        document.getElementById("count").textContent =
-          list.length + " कहानियाँ";
-        document.getElementById("storyGrid").innerHTML =
-          list
-            .map(
-              (s, i) => `
-    <div class="story">
-      <div class="cover">${s.emoji}<span>${s.cat}</span></div>
-      <div class="story-body">
-        <h3>${s.title}</h3>
-        <p>${(s.text || "").slice(0, 90)}...</p>
-        <button onclick="readStoryByTitle('${s.title.replace(/'/g, "\\'")}')">पढ़ें →</button>
-      </div>
-    </div>`,
-            )
-            .join("") || "<p class='empty'>कोई कहानी नहीं मिली।</p>";
+      let allStories = [];
+      let currentStory = null;
+      let activeCategory = "सभी";
+      let currentFontSize = 19;
+
+      const categoryIcons = {
+        सभी: "🌟",
+        प्रेरणादायक: "💡",
+        "मोरल कहानी": "📜",
+        परिवार: "🏡",
+        "जीवन की सीख": "🌱",
+        रिश्ते: "❤️",
+        आध्यात्मिक: "🕉️",
+        कहानी: "📖",
+      };
+
+      // Fallback sample stories if offline or database initial
+      const sampleStories = [
+        {
+          id: 101,
+          title: "एकता में बल — The Power of Unity",
+          category: "प्रेरणादायक",
+          cover_image: "",
+          read_time: "5 मिनट",
+          created_at: new Date().toISOString(),
+          moral:
+            "सच्ची ताकत अकेले उड़ने में नहीं, बल्कि अपनों के साथ एकजुट रहने में होती है। जहाँ एकता है, वहाँ हर मुश्किल आसान हो जाती है।",
+          content: `Fast and furious narration\n“एक अकेला कबूतर…\nइस जाल से कभी नहीं बच सकता था…\n\nलेकिन उस दिन…\nकुछ कबूतरों ने मिलकर\nऐसा चमत्कार कर दिखाया…\n\nकि शिकारी की आँखें खुली की खुली रह गईं…”\n\nबहुत समय पहले की बात है… दूर घने जंगलों और सूखे मैदानों के बीच आसमान में कबूतरों का एक बड़ा दल उड़ रहा था। उनका नेता एक बुद्धिमान और अनुभवी सरदार कबूतर था।\n\nउसकी आंखों में अनुभव था और दिल में अपने पूरे दल के लिए चिंता। कई दिनों से उन्हें भरपेट भोजन नहीं मिला था। धरती सूख चुकी थी और खेतों में अनाज का एक दाना भी दिखाई नहीं देता था।\n\nतभी अचानक नीचे एक घने बरगद के पेड़ के पास ढेर सारे चावल के दाने बिखरे दिखाई दिए। सभी कबूतर खुशी से झूम उठे। लेकिन सरदार ने कहा— "रुक जाओ! इस वीराने में इतना अनाज कहाँ से आया? यह कोई शिकारी का जाल हो सकता है!"\n\nपर भूख के आगे युवा कबूतरों ने नहीं सुना और नीचे उतर आए। जैसे ही उन्होंने दाना चुगना शुरू किया, एक बड़ा शिकारी का जाल उनके ऊपर गिर गया!\n\nसारे कबूतर फड़फड़ाने लगे। शिकारी मुस्कुराता हुआ अपनी लाठी लेकर आगे बढ़ा।\n\nतभी सरदार ने जोर से कहा— "घबराओ मत! यदि अलग-अलग फड़फड़ाओगे तो मारे जाओगे। मेरे तीन गिनने पर सभी एक साथ पूरी ताकत से ऊपर उड़ो!"\n\nएक… दो… तीन!\n\nसारे कबूतरों ने एक साथ पंख फड़फड़ाए और आश्चर्य! वह भारी जाल कबूतरों के साथ हवा में उड़ने लगा! शिकारी स्तब्ध देखता रह गया।\n\nसरदार उन्हें अपने मित्र हिरण्यक चूहे के पास ले गया, जिसने अपने नुकीले दांतों से जाल काटकर सभी कबूतरों को आज़ाद कर दिया।`,
+        },
+        {
+          id: 102,
+          title: "अच्छे लोग – बुरे लोग",
+          category: "जीवन की सीख",
+          cover_image: "",
+          read_time: "4 मिनट",
+          created_at: new Date().toISOString(),
+          moral:
+            "दृष्टि बदलो… दुनिया बदल जाएगी। दुनिया वैसी नहीं होती जैसी वह है, बल्कि वैसी दिखाई देती है जैसा हमारा मन होता है।",
+          content: `जापान के एक शांत पहाड़ी गाँव में हिकारी नदी के किनारे मास्टर रयुशिन नाम के एक वृद्ध ज्ञानी गुरु रहते थे।\n\nएक दिन एक थका हुआ यात्री आया और उसने गुरु से पूछा, "गुरुदेव! मैं इस गाँव में बसने की सोच रहा हूँ। यहाँ के लोग कैसे हैं?"\n\nगुरु ने शांत स्वर में पूछा, "तुम जहाँ से आए हो, वहाँ के लोग कैसे थे?"\n\nयात्री कड़वाहट से बोला, "वे बहुत बुरे, धोखेबाज और मतलबी थे!"\n\nगुरु ने सिर हिलाकर कहा, "तुम्हें इस गाँव में भी वैसे ही लोग मिलेंगे।" वह निराश होकर चला गया।\n\nकुछ देर बाद दूसरा यात्री आया और उसने भी यही प्रश्न पूछा। गुरु ने उससे भी वही प्रश्न किया। यात्री मुस्कुराते हुए बोला, "वे बहुत दयालु, सहयोगी और प्रेम से भरे थे। मैं उन्हें छोड़कर दुखी हूँ।"\n\nगुरु मुस्कुराए और बोले, "तुम्हें इस गाँव में भी वैसे ही लोग मिलेंगे।"\n\nजब शिष्यों ने इसका कारण पूछा, तो गुरु ने समझाया कि हम जैसी दृष्टि रखते हैं, हमें संसार वैसा ही दिखाई देता है।`,
+        },
+        {
+          id: 103,
+          title: "चालाक दर्जी की समझदारी",
+          category: "मोरल कहानी",
+          cover_image: "",
+          read_time: "3 मिनट",
+          created_at: new Date().toISOString(),
+          moral:
+            "ताकत से ज्यादा महत्व सही समय पर सही बुद्धि के उपयोग का होता है।",
+          content: `माधव नाम का एक दर्जी अपनी समझदारी और हुनर के लिए पूरे राज्य में प्रसिद्ध था। एक बार राजा ने उसे एक ऐसा वस्त्र सिलने की चुनौती दी जिसे कोई भी फटने पर पहचान न सके...\n\nमाधव ने अपनी चातुर्य और मेहनत से सबको चकित कर दिया।`,
+        },
+      ];
+
+      // =========================================================================
+      // View Navigation & Hash Handling
+      // =========================================================================
+      function navigateHome() {
+        document.getElementById("storyView").style.display = "none";
+        document.getElementById("homeView").style.display = "block";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        window.location.hash = "home";
+        document.querySelector("nav").classList.remove("show");
       }
 
-      function renderCats() {
-        const cats = ["सभी", ...new Set(stories.map((s) => s.cat))];
-        document.getElementById("categories").innerHTML = cats
-          .map(
-            (c) =>
-              `<button class="${c === active ? "active" : ""}" onclick="active='${c}';renderCats();renderStories()">${c}</button>`,
-          )
-          .join("");
+      function navigateStories() {
+        document.getElementById("storyView").style.display = "none";
+        document.getElementById("homeView").style.display = "block";
+        const storiesEl = document.getElementById("stories");
+        if (storiesEl) {
+          storiesEl.scrollIntoView({ behavior: "smooth" });
+        }
+        window.location.hash = "stories";
+        document.querySelector("nav").classList.remove("show");
       }
 
-      function readStoryByTitle(title) {
-        const s = stories.find((item) => item.title === title);
-        if (!s) return;
-        document.body.innerHTML = `
-    <div style="max-width:800px;margin:40px auto;padding:20px;font-family:Arial;line-height:1.8">
-      <h1>${s.title}</h1>
-      <p style="white-space:pre-line;font-size:18px">${s.text}</p>
-      <button onclick="location.reload()" style="padding:12px 20px">← वापस कहानियों पर</button>
-    </div>`;
+      function navigateAbout() {
+        document.getElementById("storyView").style.display = "none";
+        document.getElementById("homeView").style.display = "block";
+        const aboutEl = document.getElementById("about");
+        if (aboutEl) {
+          aboutEl.scrollIntoView({ behavior: "smooth" });
+        }
+        window.location.hash = "about";
+        document.querySelector("nav").classList.remove("show");
       }
 
+      // =========================================================================
+      // Data Fetching & Supabase Integration
+      // =========================================================================
       async function loadStories() {
         if (!supabaseClient) {
-          console.warn("Supabase client did not load, using sample stories.");
-          renderCats();
-          renderStories();
+          allStories = [...sampleStories];
+          initRender();
           return;
         }
 
         try {
+          // Fetch from Supabase stories table
           const { data, error } = await supabaseClient
             .from("stories")
-            .select("id,title,content,created_at")
+            .select("*")
             .order("created_at", { ascending: false });
 
           if (!error && data && data.length) {
-            stories.length = 0;
-            data.forEach((s) => {
-              stories.push({
-                title: s.title,
-                cat: "कहानी",
-                text: s.content || "",
-                emoji: "📖",
-              });
+            allStories = data.map((item, idx) => {
+              // Parse & extract fields with fallbacks
+              const parsed = parseStoryDetails(item);
+              return {
+                id: item.id || idx + 1,
+                title: item.title || "कहानी",
+                category: item.category || parsed.category || "प्रेरणादायक",
+                cover_image: item.cover_image || parsed.cover_image || "",
+                content: item.content || "",
+                moral: item.moral || parsed.moral || "",
+                read_time:
+                  item.read_time ||
+                  parsed.read_time ||
+                  calculateReadTime(item.content || ""),
+                created_at: item.created_at || new Date().toISOString(),
+              };
             });
           } else {
-            console.warn("Supabase query failed, using sample stories.", error);
+            console.warn(
+              "Supabase empty or error, using default stories:",
+              error,
+            );
+            allStories = [...sampleStories];
           }
         } catch (err) {
-          console.warn("Supabase call failed, using sample stories.", err);
+          console.warn("Supabase fetch failed:", err);
+          allStories = [...sampleStories];
         }
 
-        renderCats();
+        initRender();
+        checkUrlForStory();
+      }
+
+      // Intelligently parse moral, category, or cover image if embedded in content text
+      function parseStoryDetails(item) {
+        const text = item.content || "";
+        let moral = item.moral || "";
+        let category = item.category || "प्रेरणादायक";
+        let cover_image = item.cover_image || "";
+
+        // Check for moral keywords at the end if moral column is empty
+        if (!moral) {
+          const moralMatch = text.match(
+            /(?:सीख|संदेश|Moral|शिक्षा)\s*[:\-\—\–]\s*([\s\S]+?)$/i,
+          );
+          if (moralMatch && moralMatch[1]) {
+            moral = moralMatch[1].trim();
+          }
+        }
+
+        // Check for markdown image format ![alt](url)
+        if (!cover_image) {
+          const imgMatch = text.match(/!\[.*?\]\((https?:\/\/[^\)]+)\)/i);
+          if (imgMatch) {
+            cover_image = imgMatch[1];
+          }
+        }
+
+        return {
+          moral,
+          category,
+          cover_image,
+          read_time: calculateReadTime(text),
+        };
+      }
+
+      function calculateReadTime(text) {
+        const words = (text || "").trim().split(/\s+/).length;
+        const minutes = Math.max(1, Math.ceil(words / 150));
+        return `${minutes} मिनट`;
+      }
+
+      function formatDate(dateStr) {
+        if (!dateStr) return "";
+        try {
+          const d = new Date(dateStr);
+          return d.toLocaleDateString("hi-IN", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          });
+        } catch (e) {
+          return "";
+        }
+      }
+
+      // =========================================================================
+      // Render Stories Grid (Home View)
+      // =========================================================================
+      function initRender() {
+        renderCategories();
         renderStories();
       }
 
-      renderCats();
-      renderStories();
+      function renderCategories() {
+        const cats = [
+          "सभी",
+          ...new Set(allStories.map((s) => s.category || "प्रेरणादायक")),
+        ];
+        const container = document.getElementById("categories");
+        container.innerHTML = cats
+          .map(
+            (cat) => `
+            <button class="chip-btn ${cat === activeCategory ? "active" : ""}" 
+                    onclick="filterCategory('${cat}')">
+              ${categoryIcons[cat] || "✦"} ${cat}
+            </button>
+          `,
+          )
+          .join("");
+      }
+
+      function filterCategory(cat) {
+        activeCategory = cat;
+        renderCategories();
+        renderStories();
+      }
+
+      function renderStories() {
+        const searchInput = document.getElementById("search");
+        const q = searchInput ? searchInput.value.trim().toLowerCase() : "";
+
+        const filtered = allStories.filter((s) => {
+          const matchesCat =
+            activeCategory === "सभी" || s.category === activeCategory;
+          const matchesSearch =
+            !q ||
+            (s.title && s.title.toLowerCase().includes(q)) ||
+            (s.content && s.content.toLowerCase().includes(q));
+          return matchesCat && matchesSearch;
+        });
+
+        document.getElementById("count").textContent =
+          `${filtered.length} कहानियाँ`;
+
+        const grid = document.getElementById("storyGrid");
+        if (!filtered.length) {
+          grid.innerHTML = `<div class="empty">कोई कहानी नहीं मिली। कृपया कोई अन्य शब्द खोजें।</div>`;
+          return;
+        }
+
+        grid.innerHTML = filtered
+          .map((story) => {
+            const cleanSnippet = cleanStorySnippet(story.content);
+            const coverHtml = story.cover_image
+              ? `<img src="${story.cover_image}" alt="${story.title}" loading="lazy" onerror="this.onerror=null;this.parentElement.innerHTML='<div class=\\'cover-emoji-fallback\\'>${categoryIcons[story.category] || "📖"}</div>'" />`
+              : `<div class="cover-emoji-fallback">${categoryIcons[story.category] || "📖"}</div>`;
+
+            return `
+              <div class="story-card" onclick="openStory(${story.id})">
+                <div class="story-card-cover">
+                  ${coverHtml}
+                  <span class="card-category-badge">${story.category || "प्रेरणादायक"}</span>
+                  <span class="card-read-time">⏱ ${story.read_time || "3 मिनट"}</span>
+                </div>
+                <div class="story-card-body">
+                  <h3 class="story-card-title">${story.title}</h3>
+                  <p class="story-card-excerpt">${cleanSnippet}</p>
+                  <div class="story-card-footer">
+                    <span class="story-read-link">पूरी कहानी पढ़ें →</span>
+                    <span class="card-date">${formatDate(story.created_at)}</span>
+                  </div>
+                </div>
+              </div>
+            `;
+          })
+          .join("");
+      }
+
+      function cleanStorySnippet(rawText) {
+        if (!rawText) return "";
+        // Strip markdown headers, images, bullets
+        let clean = rawText
+          .replace(/!\[.*?\]\(.*?\)/g, "")
+          .replace(/[\#\*\_]/g, "")
+          .replace(/\n+/g, " ")
+          .trim();
+        return clean.length > 110 ? clean.substring(0, 110) + "..." : clean;
+      }
+
+      // =========================================================================
+      // Story Detail View & Rich Text Parser
+      // =========================================================================
+      function openStory(storyId) {
+        const story = allStories.find((s) => String(s.id) === String(storyId));
+        if (!story) return;
+
+        currentStory = story;
+        window.location.hash = `story=${story.id}`;
+
+        // Update Breadcrumbs & Header
+        document.getElementById("crumbCategory").textContent =
+          story.category || "प्रेरणादायक";
+        document.getElementById("crumbTitle").textContent = story.title;
+        document.getElementById("storyTitle").textContent = story.title;
+        document.getElementById("storyCatBadge").textContent =
+          story.category || "प्रेरणादायक";
+        document.getElementById("storyReadTime").textContent =
+          `⏱ ${story.read_time || "4 मिनट"}`;
+        document.getElementById("storyDate").textContent = formatDate(
+          story.created_at,
+        );
+
+        // Featured Cover Banner
+        const coverBanner = document.getElementById("storyCoverBanner");
+        const coverImg = document.getElementById("storyCoverImg");
+        if (story.cover_image) {
+          coverImg.src = story.cover_image;
+          coverBanner.style.display = "block";
+        } else {
+          coverBanner.style.display = "none";
+        }
+
+        // Render Rich Content and Moral Box
+        renderStoryContent(story);
+
+        // Render Next / Previous Navigation
+        renderStoryNav(story);
+
+        // Render Related Stories ("और कहानियाँ पढ़ें")
+        renderRelatedStories(story);
+
+        // Switch View
+        document.getElementById("homeView").style.display = "none";
+        document.getElementById("storyView").style.display = "block";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function renderStoryContent(story) {
+        const contentContainer = document.getElementById("storyContentBody");
+        const moralSection = document.getElementById("moralSection");
+        const moralText = document.getElementById("moralTextContent");
+
+        let rawContent = story.content || "";
+        let moralContent = story.moral || "";
+
+        // If moral was inside the content body, separate it out for highlight box
+        const moralPattern =
+          /(?:सीख|संदेश|Moral|शिक्षा)\s*[:\-\—\–]\s*([\s\S]+?)$/i;
+        const match = rawContent.match(moralPattern);
+        if (match && !moralContent) {
+          moralContent = match[1].trim();
+          rawContent = rawContent.replace(moralPattern, "").trim();
+        }
+
+        // Parse paragraphs, dialogue, bold text, and markdown
+        const formattedHtml = formatStoryText(rawContent);
+        contentContainer.innerHTML = formattedHtml;
+
+        // Display Moral in highlighted ornate box
+        if (moralContent) {
+          moralText.textContent = moralContent;
+          moralSection.style.display = "block";
+        } else {
+          moralSection.style.display = "none";
+        }
+      }
+
+      function formatStoryText(text) {
+        if (!text) return "<p>कहानी उपलब्ध नहीं है।</p>";
+
+        // Normalize line breaks
+        const paragraphs = text.split(/\n{2,}/);
+
+        return paragraphs
+          .map((p) => {
+            let paragraph = p.trim();
+            if (!paragraph) return "";
+
+            // Handle horizontal rule lines (--- or _____)
+            if (/^[\-\_\*]{3,}$/.test(paragraph)) {
+              return "<hr />";
+            }
+
+            // Handle subheaders (## or ###)
+            if (paragraph.startsWith("### ")) {
+              return `<h3 class="story-heading-2">${paragraph.replace("### ", "")}</h3>`;
+            }
+            if (paragraph.startsWith("## ")) {
+              return `<h2 class="story-heading-2">${paragraph.replace("## ", "")}</h2>`;
+            }
+
+            // Handle markdown images: ![alt](url)
+            paragraph = paragraph.replace(
+              /!\[(.*?)\]\((.*?)\)/g,
+              '<img src="$2" alt="$1" class="story-inline-img" />',
+            );
+
+            // Format bold text: **text** or __text__
+            paragraph = paragraph.replace(
+              /\*\*(.*?)\*\*/g,
+              "<strong>$1</strong>",
+            );
+            paragraph = paragraph.replace(/__(.*?)__/g, "<strong>$1</strong>");
+
+            // Convert single line breaks to <br />
+            paragraph = paragraph.replace(/\n/g, "<br />");
+
+            // Format dialogue / highlighted quote blocks if enclosed in “...” or "..."
+            if (
+              paragraph.startsWith("“") &&
+              paragraph.endsWith("”") &&
+              paragraph.length > 30
+            ) {
+              return `<div class="story-dialogue">${paragraph}</div>`;
+            }
+
+            return `<p>${paragraph}</p>`;
+          })
+          .join("");
+      }
+
+      // Render Next / Previous buttons
+      function renderStoryNav(story) {
+        const currentIndex = allStories.findIndex(
+          (s) => String(s.id) === String(story.id),
+        );
+        const prevStory =
+          currentIndex > 0 ? allStories[currentIndex - 1] : null;
+        const nextStory =
+          currentIndex < allStories.length - 1
+            ? allStories[currentIndex + 1]
+            : null;
+
+        const navContainer = document.getElementById("storyNavBar");
+        let html = "";
+
+        if (prevStory) {
+          html += `
+            <a class="nav-story-card prev" href="javascript:void(0)" onclick="openStory(${prevStory.id})">
+              <span class="nav-label">← पिछली कहानी</span>
+              <span class="nav-story-title">${prevStory.title}</span>
+            </a>
+          `;
+        } else {
+          html += `<div></div>`;
+        }
+
+        if (nextStory) {
+          html += `
+            <a class="nav-story-card next" href="javascript:void(0)" onclick="openStory(${nextStory.id})">
+              <span class="nav-label">अगली कहानी →</span>
+              <span class="nav-story-title">${nextStory.title}</span>
+            </a>
+          `;
+        } else {
+          html += `<div></div>`;
+        }
+
+        navContainer.innerHTML = html;
+      }
+
+      // Render 3 Related Stories
+      function renderRelatedStories(story) {
+        const related = allStories
+          .filter((s) => String(s.id) !== String(story.id))
+          .slice(0, 3);
+
+        const container = document.getElementById("relatedGrid");
+        if (!related.length) {
+          container.innerHTML = "";
+          return;
+        }
+
+        container.innerHTML = related
+          .map((s) => {
+            const cleanSnippet = cleanStorySnippet(s.content);
+            const coverHtml = s.cover_image
+              ? `<img src="${s.cover_image}" alt="${s.title}" loading="lazy" />`
+              : `<div class="cover-emoji-fallback">${categoryIcons[s.category] || "📖"}</div>`;
+
+            return `
+              <div class="story-card" onclick="openStory(${s.id})">
+                <div class="story-card-cover">
+                  ${coverHtml}
+                  <span class="card-category-badge">${s.category || "प्रेरणादायक"}</span>
+                  <span class="card-read-time">⏱ ${s.read_time || "3 मिनट"}</span>
+                </div>
+                <div class="story-card-body">
+                  <h3 class="story-card-title">${s.title}</h3>
+                  <p class="story-card-excerpt">${cleanSnippet}</p>
+                  <div class="story-card-footer">
+                    <span class="story-read-link">पढ़ें →</span>
+                  </div>
+                </div>
+              </div>
+            `;
+          })
+          .join("");
+      }
+
+      // =========================================================================
+      // Reader Controls (Font Size, Social Sharing, Toast)
+      // =========================================================================
+      function adjustFontSize(delta) {
+        if (delta === 0) {
+          currentFontSize = 19;
+        } else {
+          currentFontSize = Math.min(26, Math.max(16, currentFontSize + delta));
+        }
+        const article = document.querySelector(".story-article");
+        if (article) {
+          article.style.fontSize = `${currentFontSize}px`;
+        }
+      }
+
+      function triggerShare() {
+        if (!currentStory) return;
+        const shareData = {
+          title: currentStory.title,
+          text: `Devine Kahaniyan पर यह सुंदर कहानी पढ़ें: "${currentStory.title}"`,
+          url: window.location.href,
+        };
+
+        if (navigator.share) {
+          navigator.share(shareData).catch(() => {});
+        } else {
+          copyStoryLink();
+        }
+      }
+
+      function shareVia(platform) {
+        if (!currentStory) return;
+        const currentUrl = encodeURIComponent(window.location.href);
+        const storyTitle = encodeURIComponent(
+          `“${currentStory.title}” - Devine Kahaniyan\n\n`,
+        );
+
+        let shareUrl = "";
+        if (platform === "whatsapp") {
+          shareUrl = `https://api.whatsapp.com/send?text=${storyTitle}${currentUrl}`;
+        } else if (platform === "facebook") {
+          shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`;
+        } else if (platform === "twitter") {
+          shareUrl = `https://twitter.com/intent/tweet?text=${storyTitle}&url=${currentUrl}`;
+        }
+
+        if (shareUrl) {
+          window.open(shareUrl, "_blank", "width=600,height=500");
+        }
+      }
+
+      function copyStoryLink() {
+        navigator.clipboard
+          .writeText(window.location.href)
+          .then(() => {
+            showToast("कहानी का लिंक कॉपी हो गया! ✨");
+          })
+          .catch(() => {
+            showToast("लिंक कॉपी नहीं हो सका।");
+          });
+      }
+
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.textContent = message;
+        toast.classList.add("show");
+        setTimeout(() => {
+          toast.classList.remove("show");
+        }, 2500);
+      }
+
+      // Check URL Hash on Page Load or Back/Forward Button
+      function checkUrlForStory() {
+        const hash = window.location.hash;
+        if (hash.startsWith("#story=")) {
+          const id = hash.replace("#story=", "");
+          openStory(id);
+        } else if (hash === "#stories") {
+          navigateStories();
+        } else if (hash === "#about") {
+          navigateAbout();
+        } else {
+          navigateHome();
+        }
+      }
+
+      window.addEventListener("hashchange", () => {
+        const hash = window.location.hash;
+        if (hash.startsWith("#story=")) {
+          const id = hash.replace("#story=", "");
+          if (!currentStory || String(currentStory.id) !== String(id)) {
+            openStory(id);
+          }
+        } else if (hash === "#stories") {
+          navigateStories();
+        } else if (hash === "#about") {
+          navigateAbout();
+        } else if (hash === "#home" || hash === "") {
+          navigateHome();
+        }
+      });
+
+      // Initial Bootstrap
       loadStories();
     </script>
   </body>
