@@ -282,9 +282,10 @@
       const env = window.__ENV__ || {};
       const SUPABASE_URL = env.SUPABASE_URL || "";
       const SUPABASE_KEY = env.SUPABASE_KEY || "";
-      const supabaseClient = (window.supabase && SUPABASE_URL && SUPABASE_KEY)
-        ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
-        : null;
+      const supabaseClient =
+        window.supabase && SUPABASE_URL && SUPABASE_KEY
+          ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+          : null;
 
       let allStories = [];
       let currentStory = null;

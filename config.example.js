@@ -4,3 +4,4 @@ window.__ENV__ = {
   SUPABASE_URL: "https://your-project-ref.supabase.co",
   SUPABASE_KEY: "your-supabase-publishable-or-anon-key"
 };
+
