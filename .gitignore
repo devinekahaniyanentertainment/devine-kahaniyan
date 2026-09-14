@@ -1,0 +1,14 @@
+# Environment & Secret Credentials
+.env
+.env*.local
+config.js
+
+# Supabase queries & SQL folder
+supabase/
+*.sql
+
+# Logs & OS artifacts
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
