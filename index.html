@@ -38,7 +38,9 @@
       <nav>
         <a href="javascript:void(0)" onclick="navigateHome()">होम</a>
         <a href="javascript:void(0)" onclick="navigateStories()">कहानियाँ</a>
-        <a href="javascript:void(0)" onclick="navigateAbout()">हमारे बारे में</a>
+        <a href="javascript:void(0)" onclick="navigateAbout()"
+          >हमारे बारे में</a
+        >
       </nav>
     </header>
 
@@ -56,7 +58,11 @@
             परिवार, संघर्ष, रिश्तों, सफलता और जीवन की सच्चाइयों से जुड़ी दिल को
             छू लेने वाली प्रामाणिक हिंदी कहानियों का विशाल संग्रह।
           </p>
-          <a class="btn-primary" href="javascript:void(0)" onclick="navigateStories()">
+          <a
+            class="btn-primary"
+            href="javascript:void(0)"
+            onclick="navigateStories()"
+          >
             <span>कहानियाँ पढ़ें</span>
             <span>→</span>
           </a>
@@ -341,40 +347,49 @@
       ];
 
       // =========================================================================
-      // View Navigation & Clean URL Handling
+      // View Navigation & Clean URL Handling (Query Parameters instead of #)
       // =========================================================================
-      function navigateHome() {
+      function navigateHome(updateHistory = true) {
         document.getElementById("storyView").style.display = "none";
         document.getElementById("homeView").style.display = "block";
         window.scrollTo({ top: 0, behavior: "smooth" });
-        if (window.location.hash) {
-          history.replaceState(null, "", window.location.pathname + window.location.search);
+        if (updateHistory) {
+          const url = new URL(window.location.href);
+          url.searchParams.delete("story");
+          url.hash = "";
+          window.history.pushState({}, "", url.pathname);
         }
         document.querySelector("nav").classList.remove("show");
       }
 
-      function navigateStories() {
+      function navigateStories(updateHistory = true) {
         document.getElementById("storyView").style.display = "none";
         document.getElementById("homeView").style.display = "block";
         const storiesEl = document.getElementById("stories");
         if (storiesEl) {
           storiesEl.scrollIntoView({ behavior: "smooth" });
         }
-        if (window.location.hash.startsWith("#story=")) {
-          history.replaceState(null, "", window.location.pathname + window.location.search);
+        if (updateHistory) {
+          const url = new URL(window.location.href);
+          url.searchParams.delete("story");
+          url.hash = "";
+          window.history.pushState({}, "", url.pathname);
         }
         document.querySelector("nav").classList.remove("show");
       }
 
-      function navigateAbout() {
+      function navigateAbout(updateHistory = true) {
         document.getElementById("storyView").style.display = "none";
         document.getElementById("homeView").style.display = "block";
         const aboutEl = document.getElementById("about");
         if (aboutEl) {
           aboutEl.scrollIntoView({ behavior: "smooth" });
         }
-        if (window.location.hash.startsWith("#story=")) {
-          history.replaceState(null, "", window.location.pathname + window.location.search);
+        if (updateHistory) {
+          const url = new URL(window.location.href);
+          url.searchParams.delete("story");
+          url.hash = "";
+          window.history.pushState({}, "", url.pathname);
         }
         document.querySelector("nav").classList.remove("show");
       }
@@ -580,12 +595,17 @@
       // =========================================================================
       // Story Detail View & Rich Text Parser
       // =========================================================================
-      function openStory(storyId) {
+      function openStory(storyId, updateHistory = true) {
         const story = allStories.find((s) => String(s.id) === String(storyId));
         if (!story) return;
 
         currentStory = story;
-        window.location.hash = `story=${story.id}`;
+        if (updateHistory) {
+          const url = new URL(window.location.href);
+          url.searchParams.set("story", story.id);
+          url.hash = "";
+          window.history.pushState({ storyId: story.id }, "", url.toString());
+        }
 
         // Update Breadcrumbs & Header
         document.getElementById("crumbCategory").textContent =
@@ -861,25 +881,24 @@
 
       // Check URL on Page Load or Back/Forward Button
       function checkUrlForStory() {
-        const hash = window.location.hash;
-        if (hash.startsWith("#story=")) {
-          const id = hash.replace("#story=", "");
-          openStory(id);
+        const url = new URL(window.location.href);
+        let storyId = url.searchParams.get("story");
+        if (!storyId && url.hash.startsWith("#story=")) {
+          storyId = url.hash.replace("#story=", "");
+        }
+        if (storyId) {
+          openStory(storyId, false);
         } else {
-          navigateHome();
+          navigateHome(false);
         }
       }
 
+      window.addEventListener("popstate", () => {
+        checkUrlForStory();
+      });
+
       window.addEventListener("hashchange", () => {
-        const hash = window.location.hash;
-        if (hash.startsWith("#story=")) {
-          const id = hash.replace("#story=", "");
-          if (!currentStory || String(currentStory.id) !== String(id)) {
-            openStory(id);
-          }
-        } else {
-          navigateHome();
-        }
+        checkUrlForStory();
       });
 
       // Initial Bootstrap
